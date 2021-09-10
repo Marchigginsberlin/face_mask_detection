@@ -22,7 +22,7 @@ mp_face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
 
 ### Import the model for predictions
-save_path = ('../models/Model_1')
+save_path = ('../models/model_cnn')
 model = tf.keras.models.load_model(save_path)
 
 #transforming coordinates of the face into a cropped image
@@ -107,9 +107,9 @@ def draw_bounding_box(frame, faces_coordinates, predictions):
     faces_coordinates : list of lists of integers
     '''
     color_corresp = {
-        1: (0,0,255),
-        2: (0,255,0),
-        3: (255,0,0)
+        0: (255,0,0),
+        1: (255,165,0),
+        2: (0,255,0)
     }
 
     for index, box in enumerate(faces_coordinates):
