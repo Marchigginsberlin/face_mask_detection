@@ -7,9 +7,19 @@ wheel>=0.29
 # data science
 numpy
 pandas
+matplotlib
 scikit-learn
+<<<<<<< HEAD
 pyyaml
 h5py
+=======
+torch
+
+#computer vision
+facenet_pytorch
+PIL
+cv2
+>>>>>>> 57a3a36746977becbfc41869c98837298db6302d
 
 # tests/linter
 black
@@ -29,3 +39,6 @@ six>=1.14
 joblib
 memoized-property
 termcolor
+random
+time
+imutils
