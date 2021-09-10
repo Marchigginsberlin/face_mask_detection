@@ -126,6 +126,8 @@ def run_video():
     success, image = cap.read()
     image_shape = image.shape
     print(image_shape)
+    process_this_frame = True
+    i = 0
 
     with mp_face_detection.FaceDetection(
     model_selection=0, min_detection_confidence=0.5) as face_detection:
@@ -157,17 +159,18 @@ def run_video():
                 # Resize
                 # resized_faces = resized_faces_array(encoded_faces) # dict {'face1': ndarray,...}
 
-
-
                 # Get the prediction for each face (of whether it has a mask)
                 #predicted_faces = predict_faces(encoded_faces)
-                predicted_faces = pred_mask(encoded_faces)
-                print(predicted_faces)
+                if i % 2 == 0:
+                    predicted_faces = pred_mask(encoded_faces)
+                    return predicted_faces
+                return predicted faces
 
-                # Update the squares accordingly
-                draw_bounding_box(image, faces_coordinates, predicted_faces)
-            
+            i += 1
             process_this_frame = not process_this_frame
+
+            # Update the squares accordingly
+            draw_bounding_box(image, faces_coordinates, predicted_faces)            
 
             image.flags.writeable = True
             image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
@@ -178,3 +181,14 @@ def run_video():
     cap.release()
 
 run_video()
+
+#to implement:
+
+# Resize frame of video to 1/4 size for faster face recognition processing
+# small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+
+# laggy predictions
+
+# Boxes_names
+
+# Identifying_faces
