@@ -9,30 +9,25 @@ numpy
 pandas
 matplotlib
 scikit-learn
-<<<<<<< HEAD
 pyyaml
 h5py
-=======
 torch
+tensorflow >= 2.6
 
 #computer vision
+torch
 facenet_pytorch
 PIL
 cv2
->>>>>>> 57a3a36746977becbfc41869c98837298db6302d
+mediapipe
+face_recognition
+mtcnn
 
-# tests/linter
-black
-coverage
-flake8
-pytest
-yapf
 
 # API
-gcsfs
-google-cloud-storage
-mlflow
-s3fs
+dotenv
+twilio
+
 
 # utilities
 six>=1.14
@@ -42,3 +37,5 @@ termcolor
 random
 time
 imutils
+typing
+os

@@ -1,0 +1,1 @@
+link: https://www.flaticon.com/free-icon/patient_2750657?term=mask&page=1&position=24&page=1&position=24&related_id=2750657&origin=search
