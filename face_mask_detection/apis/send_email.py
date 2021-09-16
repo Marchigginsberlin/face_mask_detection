@@ -33,7 +33,7 @@ app.add_middleware(
 )
 
 @app.post("/files")
-async def create_file(blob: UploadFile = File(...)):
+async def create_file(blob: UploadFile = File(...), email: str = Form(...)):
     #import ipdb; ipdb.set_trace()
     #print(blob)
     content = await blob.read() 
@@ -42,17 +42,17 @@ async def create_file(blob: UploadFile = File(...)):
     img = Image.open(bytes_stream)
     print(img)
     img.save('hey.png')
-    sending_email("hey.png", "fernandonjardim@gmail.com")
+    sending_email("hey.png", email)
     return {"status": "image sent"}
 
 #@app.post("/uploadfile/")
 #async def create_upload_file(file: UploadFile = File(...)):
 #   return {"filename": file.filename}
 
-def sending_email(image, email_address):
+def sending_email(image, email):
     message = Mail(
         from_email='emaildetendencias@gmail.com',
-        to_emails= email_address,
+        to_emails= email,
         subject='Mask Alert',
         html_content='<strong>Someone at the living room has no mask</strong>')
 
