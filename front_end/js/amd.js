@@ -174,6 +174,32 @@ async function load_classification_model() {
 
 Promise.all([load_detection_model(), load_classification_model()])
 
+function dataURItoBlob(dataURI) {
+  // convert base64 to raw binary data held in a string
+  // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+  var byteString = atob(dataURI.split(',')[1]);
+
+  // separate out the mime component
+  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+
+  // write the bytes of the string to an ArrayBuffer
+  var ab = new ArrayBuffer(byteString.length);
+
+  // create a view into the buffer
+  var ia = new Uint8Array(ab);
+
+  // set the bytes of the buffer to the correct values
+  for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+  }
+
+  // write the ArrayBuffer to a blob, and you're done
+  var blob = new Blob([ab], {type: mimeString});
+  return blob;
+
+}
+
+
 function capture() {
   var canvas = document.getElementById('canvas');
   var video = document.getElementById('videoElement');
@@ -181,12 +207,68 @@ function capture() {
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
   const predictions = videoCanvas.data
+
+  const formData = new FormData();
+  const fileField = document.querySelector('input[type="file"]');
+  const img_tensor = tf.browser.fromPixels(video);
+
+  // wrap around a timer ??!!?!
   predictions.forEach((prediction,index) => {
     if (prediction[4] === 0) {
       var height_preview = prediction[3]
       var width_preview = prediction[2]
-      canvas.getContext('2d').drawImage(video, prediction[0]-0.5*width_preview, prediction[1]-0.25*height_preview, 2*width_preview, 1.5*height_preview, index*100, 0, 100, 140);
+      var ctx = canvas.getContext('2d')
+      ctx.drawImage(video, prediction[0]-0.5*width_preview, prediction[1]-0.25*height_preview, 2*width_preview, 1.5*height_preview, index*100, 0, 100, 140);
+      var email = document.getElementById('email').value;
+
+
+      var image = new Image();
+      image.id = "test-1";
+      image.src = canvas.toDataURL();
+      //document.getElementById('img-to-crop').appendChild(image);
+      
+      
+      blob = dataURItoBlob(canvas.toDataURL())
+      console.log("Blob", blob)
+
+      //console.log("src", canvas.toDataURL())
+      //formData.append('frame', canvas.toDataURL('image/jpeg', 0.5))
+      formData.append('blob', blob)
+      console.log("form data", formData);
+
+      formData.append('email', email)
+
+      console.log("email", email)
+      console.log("formData", formData)
+
+
+
     }
   })
+
+  fetch("https://amdemail.herokuapp.com/files", {
+    method: "POST",
+    body: formData,
+    //headers: {'content-type': 'application/x-www-form-urlencoded'}
+
+  })
+  .then(response => response.json())
+  .then(result => {
+    console.log('Success:', result);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+})
+
+
 }
+
+/* 
+fetch('http://localhost:8000/files', {
+  method: 'POST',
+  body: image,
+  headers: { 'Content-Type': 'multipart/form-data',
+  'accept' : 'application/json'}
+})
+*/
 setupPage();
