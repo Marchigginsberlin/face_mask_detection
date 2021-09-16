@@ -64,7 +64,7 @@ def sending_email(image, email_address):
 
     attachedFile = Attachment(
         FileContent(encoded_file),
-        FileName('1.jpg'),
+        FileName('hey.png'),
         FileType('application/jpg'),
         Disposition('attachment')
     )
