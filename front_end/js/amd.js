@@ -263,6 +263,52 @@ function capture() {
 
 }
 
+function capture2() {
+  var canvas = document.getElementById('canvas');
+  var video = document.getElementById('videoElement');
+  var videoCanvas = document.getElementById('videoCanvas');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const predictions = videoCanvas.data
+
+  const formData = new FormData();
+  const fileField = document.querySelector('input[type="file"]');
+  const img_tensor = tf.browser.fromPixels(video);
+
+  // wrap around a timer ??!!?!
+  predictions.forEach((prediction,index) => {
+    if (prediction[4] === 0) {
+      var height_preview = prediction[3]
+      var width_preview = prediction[2]
+      var ctx = canvas.getContext('2d')
+      ctx.drawImage(video, prediction[0]-0.5*width_preview, prediction[1]-0.25*height_preview, 2*width_preview, 1.5*height_preview, index*100, 0, 100, 140);
+      var phone = document.getElementById('phone').value;
+
+      formData.append('phone', phone)
+      console.log("phone", phone)
+      console.log("formData", formData)
+    } 
+  })
+
+  fetch("https://amdemail.herokuapp.com/call", {
+    method: "POST",
+    body: formData,
+    mode: "no-cors"
+    //headers: {'content-type': 'application/x-www-form-urlencoded'}
+
+  })
+  .then(response => response.json())
+  .then(result => {
+    console.log('Success:', result);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+})
+
+
+}
+
+
 /* 
 fetch('http://localhost:8000/files', {
   method: 'POST',
@@ -272,3 +318,19 @@ fetch('http://localhost:8000/files', {
 })
 */
 setupPage();
+
+window.onload = function(){
+  document.getElementById("easter_egg").style.display='none';
+};
+
+
+function call() {
+  var x = document.getElementById("easter_egg");
+  x === "none"
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+  console.log("Easter Egg Feature Activated ;) ")
+}
